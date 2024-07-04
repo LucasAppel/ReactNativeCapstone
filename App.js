@@ -1,13 +1,103 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Image, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import SplashScreen from './screens/SplashScreen';
+import Onboarding from './screens/Onboarding';
+import Profile from './screens/Profile';
+import { useEffect, useState } from 'react';
+import UserAvatar from 'react-native-user-avatar';
+import { useNavigation } from '@react-navigation/native';
+
+const Stack = createNativeStackNavigator();
+const headerOptions = {
+  headerTitle: NaviHeader,
+  headerTitleAlign: 'center'
+  //presentation: 'formSheet'
+};
+
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [avatar, setAvatar] = useState(null);
+  const [fName, setfName] = useState('');
+  const [lName, setlName] = useState('');
+
+  const avtrData = {
+    avatar,
+    fName,
+    lName
+  };
+
+  const getState = async () => {
+    try {
+      let loginStatus = await AsyncStorage.getItem('isLoggedIn');
+      if (loginStatus === undefined) {
+        setState({isLoggedIn: 'false'})
+        setIsLoggedIn(false)
+      }
+      else setIsLoggedIn(Boolean(loginStatus));
+    }
+    catch (e) {
+      alert ('Error: Could not check login status.');
+    }
+    finally {
+      setIsLoading(false);
+    }
+  }
+
+  const setState = async (stateObj) => {
+    try {
+      await AsyncStorage.multiSet(Object.entries(stateObj).map(([key, val])=>([key, String(val)])));
+    }
+    catch (e) {
+      alert("Error, Could not set AppState: " + e);
+    }
+  }
+
+  useEffect(()=>{
+    getState();
+  }, [])
+
+  if (isLoading) return <SplashScreen/>
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer style={styles.container}>
+      <StatusBar style='auto'></StatusBar>
+      <Stack.Navigator initialRouteName={isLoggedIn ? 'Profile' : 'Onboarding'}>
+        {isLoggedIn ? (
+          // Logged In
+          <Stack.Screen name="Profile" options={{...headerOptions, headerRight: () => <AvatarImg {...avtrData} />}}>{(props)=><Profile {...props} changeAvatar={setAvatar} changefName={setfName} changelName={setlName} logout={()=>setIsLoggedIn(false)} />}</Stack.Screen> 
+        ) : (
+          // Logged Out
+          <Stack.Screen name="Welcome" options={headerOptions}>{(props)=><Onboarding {...props} login={()=>setIsLoggedIn(true)} />}</Stack.Screen>
+        )}
+        
+       
+      </Stack.Navigator>
+    </NavigationContainer>
   );
+}
+
+function NaviHeader(){
+  return (
+  <View style={{}}>
+    <Image source={require('./assets/Logo.png')}  resizeMode='contain'/>
+  </View>
+  )
+}
+
+function BackButton(){
+  return (
+    <UserAvatar size ={32} name="❮" style={{width: 32, margin: 0}} bgColors={['#495E57']} />
+  )
+}
+
+function AvatarImg({avatar, fName, lName}){
+  return (
+    <UserAvatar size ={32} name={fName + (lName ? " " + lName : "")} src={avatar} style={{width: 32, margin: 0}} bgColors={['#495E57']} />
+  )
 }
 
 const styles = StyleSheet.create({
@@ -16,5 +106,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%'
   },
 });
