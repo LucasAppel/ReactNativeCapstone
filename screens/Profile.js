@@ -12,14 +12,15 @@ import * as ImagePicker from 'expo-image-picker';
 
 export default function Profile({navigation, changeAvatar, changefName, changelName, logout}){
     // Logout function
-    /* const logOut = ()=>{
-        AsyncStorage.clear()
-        navigation.reset({
+    const logOut = ()=>{
+        AsyncStorage.clear();
+        logout();
+        /* navigation.reset({
             index: 0,
             routes: [{ name: 'Welcome' }]
-          })
+          }) */
     }
- */
+ 
     // Email Options
     const emailOptions = ["Order statuses", "Password changes", "Special Offers", "Newsletter"];
     const [selectedEmailOptions, setSelectedEmailOptions] = useState([]);
@@ -53,7 +54,7 @@ export default function Profile({navigation, changeAvatar, changefName, changelN
           quality: 1,
         });
     
-        console.log(result);
+     
     
         if (!result.canceled) {
             let img = result.assets[0].uri;
@@ -81,19 +82,16 @@ export default function Profile({navigation, changeAvatar, changefName, changelN
         setSelectedEmailOptions(emailOpt ? JSON.parse(emailOpt) : []);        
         setInitialized(true); // Set initialization to true after data is fetched
         setDataChanged(false);
-        console.log('Data fetched and initialized set to true');
         return;
     }
     useEffect(() => {
         if (!initialized) {
-        console.log('First init');
         fetchData();
         }
     }, [initialized]);
     
     useEffect(() => {
         if (initialized) {
-        console.log('Data has changed');
         setDataChanged(true);
         }
     }, [fName, lName, email, phone, image, selectedEmailOptions]);
@@ -156,7 +154,7 @@ export default function Profile({navigation, changeAvatar, changefName, changelN
                     </View>
                 </ScrollView>
                 <View style={{flex: 0.2, gap: 15, paddingBottom: 20, paddingHorizontal: 20}}>
-                    <Button title='Log Out' onPress={logout}/>
+                    <Button title='Log Out' onPress={logOut}/>
                     <View style={{flexDirection: 'row', gap: 10, justifyContent: 'space-evenly'}}>
                         <Button title='Discard Changes' onPress={fetchData} disabled={!dataChanged} />
                         <Button title='Save Changes' onPress={saveData} disabled={!dataChanged || !validfName || !validlName || !validMail || !validPhone} />

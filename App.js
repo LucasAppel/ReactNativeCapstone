@@ -8,7 +8,10 @@ import Onboarding from './screens/Onboarding';
 import Profile from './screens/Profile';
 import { useEffect, useState } from 'react';
 import UserAvatar from 'react-native-user-avatar';
-import { useNavigation } from '@react-navigation/native';
+import HomeScreen from './screens/Home';
+import { AppRegistry } from 'react-native';
+import { PaperProvider } from 'react-native-paper';
+import { name as appName } from './app.json';
 
 const Stack = createNativeStackNavigator();
 const headerOptions = {
@@ -63,22 +66,25 @@ export default function App() {
 
   if (isLoading) return <SplashScreen/>
   return (
-    <NavigationContainer style={styles.container}>
-      <StatusBar style='auto'></StatusBar>
-      <Stack.Navigator initialRouteName={isLoggedIn ? 'Profile' : 'Onboarding'}>
-        {isLoggedIn ? (
-          // Logged In
-          <Stack.Screen name="Profile" options={{...headerOptions, headerRight: () => <AvatarImg {...avtrData} />}}>{(props)=><Profile {...props} changeAvatar={setAvatar} changefName={setfName} changelName={setlName} logout={()=>setIsLoggedIn(false)} />}</Stack.Screen> 
-        ) : (
-          // Logged Out
-          <Stack.Screen name="Welcome" options={headerOptions}>{(props)=><Onboarding {...props} login={()=>setIsLoggedIn(true)} />}</Stack.Screen>
-        )}
-        
-       
-      </Stack.Navigator>
-    </NavigationContainer>
+    <PaperProvider>
+      <NavigationContainer style={styles.container}>
+        <StatusBar style='auto'></StatusBar>
+        <Stack.Navigator initialRouteName={isLoggedIn ? 'Home' : 'Onboarding'}>
+          {isLoggedIn ? (
+            // Logged In
+            <>
+            <Stack.Screen name="Home" component={HomeScreen}></Stack.Screen>
+            <Stack.Screen name="Profile" options={{...headerOptions, headerRight: () => <AvatarImg {...avtrData} />}}>{(props)=><Profile {...props} changeAvatar={setAvatar} changefName={setfName} changelName={setlName} logout={()=>setIsLoggedIn(false)} />}</Stack.Screen> 
+            </>) : (
+            // Logged Out
+            <Stack.Screen name="Welcome" options={headerOptions}>{(props)=><Onboarding {...props} login={()=>setIsLoggedIn(true)} />}</Stack.Screen>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
+AppRegistry.registerComponent(appName, () => App);
 
 function NaviHeader(){
   return (
