@@ -5,7 +5,6 @@ import {
   Image,
   StyleSheet,
   SafeAreaView,
-  StatusBar,
   Alert,
   FlatList,
 } from 'react-native';
@@ -46,6 +45,7 @@ export default function HomeScreen() {
     sections.map(() => false)
   );
 
+
   const fetchData = async() => {
     // 1. Implement this function
     let menuItems;
@@ -80,7 +80,6 @@ export default function HomeScreen() {
         }
 
         const menuItemsWithImages = await getMenuItemsImages(menuItems);
-        //console.log(menuItems);
         setData(menuItemsWithImages);
       } catch (e) {
         // Handle error
@@ -129,40 +128,50 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Searchbar
-        placeholder="Search"
-        placeholderTextColor="white"
-        onChangeText={handleSearchChange}
-        value={searchBarText}
-        style={styles.searchBar}
-        iconColor="white"
-        inputStyle={{ color: 'white' }}
-        elevation={0}
-      />
-      <Filters
-        selections={filterSelections}
-        onChange={handleFiltersChange}
-        sections={sections}
-      />
-      <FlatList
-        style={styles.sectionList}
-        data={data}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <Item title={item.name} price={item.price} desc={item.description} img={item.image} key={item.name} />
-        )}
-        ItemSeparatorComponent={<View style={{borderBottomColor: 'grey', borderBottomWidth: 1}}></View>}
-      />
+    <SafeAreaView style={{flex: 1}}>
+        <View style={styles.banner}>
+            <Text style={styles.header}>Little Lemon</Text>
+            <Text style={[styles.title, {color: 'white'}]}>Chicago</Text>
+            <Text style={[styles.text, {color: 'white'}]}>We are family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
+        </View>
+        <View style={{flex: 1, backgroundColor: 'white'}}>
+            <Searchbar
+                placeholder="Search"
+                placeholderTextColor="white"
+                onChangeText={handleSearchChange}
+                value={searchBarText}
+                style={styles.searchBar}
+                iconColor="white"
+                inputStyle={{ color: 'white' }}
+                elevation={0}
+            />
+            <Filters
+                selections={filterSelections}
+                onChange={handleFiltersChange}
+                sections={sections}
+            />
+            <FlatList
+                style={styles.sectionList}
+                data={data}
+                keyExtractor={(item) => item.name}
+                renderItem={({ item }) => (
+                <Item title={item.name} price={item.price} desc={item.description} img={item.image} key={item.name} />
+                )}
+                ItemSeparatorComponent={<View style={{borderBottomColor: 'grey', borderBottomWidth: 1}}></View>}
+            />
+        </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-    backgroundColor: 'white',
+  banner: {
+    height: 130,
+    backgroundColor: '#495E57',
+    paddingHorizontal: 16,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20
+    
   },
   sectionList: {
     paddingHorizontal: 16,
@@ -174,7 +183,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#495E57',
     shadowRadius: 0,
     shadowOpacity: 0,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginTop: 20
   },
   item: {
     flexDirection: 'row',
@@ -185,14 +195,17 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 24,
-    paddingVertical: 8,
-    color: '#FBDABB',
+    paddingTop: 8,
+    color: '#F4CE14',
     backgroundColor: '#495E57',
+    fontWeight: 'bold',
+    fontFamily: 'MarkaziText_700Bold'
   },
   title: {
     fontSize: 20,
     color: 'black',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    paddingBottom: 10
   },
   text: {
     fontSize: 14,

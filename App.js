@@ -73,7 +73,7 @@ export default function App() {
           {isLoggedIn ? (
             // Logged In
             <>
-            <Stack.Screen name="Home" component={HomeScreen}></Stack.Screen>
+            <Stack.Screen name="Home" component={HomeScreen} options={{...headerOptions, headerRight: () => <AvatarImg {...avtrData} />}}></Stack.Screen>
             <Stack.Screen name="Profile" options={{...headerOptions, headerRight: () => <AvatarImg {...avtrData} />}}>{(props)=><Profile {...props} changeAvatar={setAvatar} changefName={setfName} changelName={setlName} logout={()=>setIsLoggedIn(false)} />}</Stack.Screen> 
             </>) : (
             // Logged Out

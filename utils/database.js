@@ -54,9 +54,9 @@ export async function filterByQueryAndCategories(query, activeCategories) {
         }
         
         const result = await db.getAllAsync(sqlQuery, params);
-        console.log("Query: " + sqlQuery)
+/*         console.log("Query: " + sqlQuery)
         console.log("Params: " + params)
-        console.log("res: " + result.length)
+        console.log("res: " + result.length) */
         return result;
 
     } catch (error) {
