@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Image, Text, View } from 'react-native';
+import { StyleSheet, Image, Text, View, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,6 +34,21 @@ export default function App() {
     lName
   };
 
+  const getAvtrData = async () => {
+    try {
+      let firstName = await AsyncStorage.getItem('firstName');
+      setfName(firstName);
+      let lastName = await AsyncStorage.getItem('lastName');
+      setlName(lastName);
+      let avtr = JSON.parse(await AsyncStorage.getItem('avatar'));
+      setAvatar(avtr);
+      
+    }
+    catch (e) {
+      alert ('Error: Could not load avatar data.');
+    }
+  }
+
   const getState = async () => {
     try {
       let loginStatus = await AsyncStorage.getItem('isLoggedIn');
@@ -62,6 +77,7 @@ export default function App() {
 
   useEffect(()=>{
     getState();
+    getAvtrData();
   }, [])
 
   if (isLoading) return <SplashScreen/>
@@ -73,8 +89,15 @@ export default function App() {
           {isLoggedIn ? (
             // Logged In
             <>
-            <Stack.Screen name="Home" component={HomeScreen} options={{...headerOptions, headerRight: () => <AvatarImg {...avtrData} />}}></Stack.Screen>
-            <Stack.Screen name="Profile" options={{...headerOptions, headerRight: () => <AvatarImg {...avtrData} />}}>{(props)=><Profile {...props} changeAvatar={setAvatar} changefName={setfName} changelName={setlName} logout={()=>setIsLoggedIn(false)} />}</Stack.Screen> 
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={({ navigation }) => ({
+                ...headerOptions,
+                headerRight: ()=>(<Pressable onPress={() => navigation.navigate('Profile')}><AvatarImg {...avtrData} /></Pressable>)
+              })}
+            />
+            <Stack.Screen name="Profile" options={{...headerOptions, headerRight: ()=>(<AvatarImg {...avtrData} />) }}>{(props)=><Profile {...props} changeAvatar={setAvatar} changefName={setfName} changelName={setlName} logout={()=>setIsLoggedIn(false)} />}</Stack.Screen> 
             </>) : (
             // Logged Out
             <Stack.Screen name="Welcome" options={headerOptions}>{(props)=><Onboarding {...props} login={()=>setIsLoggedIn(true)} />}</Stack.Screen>

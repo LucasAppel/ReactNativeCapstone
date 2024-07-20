@@ -133,7 +133,7 @@ export default function Profile({navigation, changeAvatar, changefName, changelN
                             <Text style={styles.h1}>Personal Information</Text>
                             <View>
                                 <Text>Avatar</Text>
-                                <View style={{flexDirection: 'row', gap: 20, alignItems: 'center' }}>
+                                <View style={{flexDirection: 'row', gap: 20, alignItems: 'center', height: 80 }}>
                                     <UserAvatar size={64} name={fName + (lName ? " " + lName : "")} style={{width: 64, margin: 0}} bgColors={['#495E57']} src={image} />
                                     <Button title="Change" onPress={pickImage} style={styles.btn}/>
                                     <Button title="Remove" onPress={delImage} disabled={!Boolean(image)} style={styles.btn} />

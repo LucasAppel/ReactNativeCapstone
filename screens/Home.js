@@ -129,10 +129,15 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-        <View style={styles.banner}>
-            <Text style={styles.header}>Little Lemon</Text>
-            <Text style={[styles.title, {color: 'white'}]}>Chicago</Text>
-            <Text style={[styles.text, {color: 'white'}]}>We are family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
+        <Text style={styles.header}>Little Lemon</Text>
+        <View style={styles.banner}>            
+            <View style={{flex: 0.75}}>
+                <Text style={[styles.title, {color: 'white'}]}>Chicago</Text>
+                <Text style={[styles.text, {color: 'white'}]}>We are family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
+            </View>
+            <View style={{flex: 0.25}}>
+                <Image style={styles.image} source={require('../assets/Hero image.png')}/>
+            </View>
         </View>
         <View style={{flex: 1, backgroundColor: 'white'}}>
             <Searchbar
@@ -166,7 +171,8 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   banner: {
-    height: 130,
+    height: 115,
+    flexDirection: 'row',
     backgroundColor: '#495E57',
     paddingHorizontal: 16,
     borderBottomLeftRadius: 20,
@@ -199,7 +205,7 @@ const styles = StyleSheet.create({
     color: '#F4CE14',
     backgroundColor: '#495E57',
     fontWeight: 'bold',
-    fontFamily: 'MarkaziText_700Bold'
+    paddingHorizontal: 16
   },
   title: {
     fontSize: 20,
